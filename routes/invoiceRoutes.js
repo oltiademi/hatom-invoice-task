@@ -8,6 +8,7 @@ const ClientRepository = require("../repository/ClientRepository");
 const ServiceRepository = require("../repository/ServiceRepository");
 const InvoiceController = require("../controllers/InvoiceController");
 const PDFService = require("../service/PdfService");
+const EmailService = require("../service/EmailService")
 const checkRole = require("../middleware/checkRole");
 const protect = require("../middleware/protect");
 
@@ -15,11 +16,13 @@ const invoiceRepository = new InvoiceRepository();
 const clientRepository = new ClientRepository();
 const serviceRepository = new ServiceRepository();
 const pdfService = new PDFService();
+const emailService = new EmailService();
 const invoiceService = new InvoiceService(
   invoiceRepository,
   clientRepository,
   serviceRepository,
-  pdfService
+  pdfService,
+  emailService
 );
 const invoiceController = new InvoiceController(invoiceService);
 

@@ -9,6 +9,10 @@ class InvoiceRepository {
     return await Invoice.find({});
   }
 
+  async findInvoiceByNumber(invoiceNumber){
+    return await Invoice.findOne({invoiceNumber: invoiceNumber})
+  }
+
   async findLastInvoice(year) {
     return await Invoice.findOne({
       invoiceNumber: new RegExp(`HA/${year}/`),

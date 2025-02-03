@@ -12,6 +12,7 @@ class ServicesService {
     
     if (existingService.length > 0)
       throw new AppError(500, "A service with this name already exists");
+    if(existingService.length ===0)
     return await this.serviceRepository.createService(serviceData);
   }
 

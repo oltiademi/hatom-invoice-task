@@ -6,6 +6,7 @@ class PDFService {
     const formattedPath = invoice.invoiceNumber && invoice.invoiceNumber.replace(/\//g, "-");
     const pdfPath = `./pdfFiles/${formattedPath}.pdf`;
     pdfGenerator.generateInvoicePDF(pdfPath);
+    return pdfPath;
   }
 }
 

@@ -1,16 +1,18 @@
-const Invoice = require("../models/Invoice");
+const AppError = require("../errorHandling/AppError");
 
 class InvoiceService {
   constructor(
     invoiceRepository,
     clientRepository,
     serviceRepository,
-    pdfService
+    pdfService,
+    emailService
   ) {
     this.invoiceRepository = invoiceRepository;
     this.clientRepository = clientRepository;
     this.serviceRepository = serviceRepository;
     this.pdfService = pdfService;
+    this.emailService = emailService;
   }
   async createInvoice(invoiceData) {
     let client = await this.clientRepository.findClientByBusinessId(
@@ -27,7 +29,6 @@ class InvoiceService {
         service.serviceName
       ); //returns array with one element
 
-      existingService = existingService[0];
       if (!existingService || existingService.length === 0) {
         existingService = await this.serviceRepository.createService({
           serviceName: service.serviceName,
@@ -62,7 +63,15 @@ class InvoiceService {
       totalInvoiceAmount.toFixed(2)
     );
 
-    await this.pdfService.generateInvoicePDF(invoice);
+    const pdfPath = await this.pdfService.generateInvoicePDF(invoice);
+
+    if (client.email) {
+      await this.emailService.sendInvoiceEmail(
+        client.email,
+        pdfPath,
+        pdfPath.split("/")[2]
+      );
+    }
 
     return await this.invoiceRepository.createInvoice(invoice);
   }
@@ -80,12 +89,17 @@ class InvoiceService {
       nextNumber = lastNumber + 1;
     }
 
-    return `HA/${year}/${String(nextNumber).padStart(3, "0")}`;
+    return `HA/${year}/${String(nextNumber).padStart(3, "0")}`; //00X
   }
 
   async findInvoiceByNumber(invoiceNumber) {
-    return this.invoiceRepository.findInvoiceByNumber(invoiceNumber);
+    const invoice = await this.invoiceRepository.findInvoiceByNumber(
+      invoiceNumber
+    );
+    if (!invoice) throw new AppError(404, "This invoice does not exist");
+    return invoice;
   }
+
   async updateInvoice(invoiceNumber, invoiceData) {
     const existingInvoice = await this.invoiceRepository.findInvoiceByNumber(
       invoiceNumber
@@ -100,6 +114,8 @@ class InvoiceService {
   }
 
   async deleteInvoiceByNumber(number) {
+    const invoice = await this.invoiceRepository.findInvoiceByNumber(number);
+    if (!invoice) throw new AppError(404, "This invoice does not exist");
     return await this.invoiceRepository.deleteInvoiceByNumber(number);
   }
 }
