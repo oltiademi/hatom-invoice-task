@@ -1,0 +1,33 @@
+{
+  "name": "hatom-invoice-task",
+  "version": "1.0.0",
+  "description": "Invoice task",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oltiademi/hatom-invoice-task.git"
+  },
+  "author": "Olti Ademi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oltiademi/hatom-invoice-task/issues"
+  },
+  "homepage": "https://github.com/oltiademi/hatom-invoice-task#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^5.12.3",
+    "nodemailer": "^6.10.0",
+    "nodemon": "^3.1.9",
+    "pdfkit": "^0.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.0",
+    "jest": "^29.7.0"
+  }
+}
