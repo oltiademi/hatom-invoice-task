@@ -1,35 +1,47 @@
-class ClientService{
-    constructor(clientRepository){
-        this.clientRepository = clientRepository
-    }
+const AppError = require("../errorHandling/AppError");
 
-    async createClient(clientData){
-        return await this.clientRepository.createClient(clientData);
-    }
+class ClientService {
+  constructor(clientRepository) {
+    this.clientRepository = clientRepository;
+  }
 
-    async findAllClients(){
-        return await this.clientRepository.findAllClients();
-    }
+  async createClient(clientData) {
+    return await this.clientRepository.createClient(clientData);
+  }
 
-    async findClientByBusinessId(businessId){
-        return await this.clientRepository.findClientByBusinessId(businessId);
-    }
+  async findAllClients() {
+    return await this.clientRepository.findAllClients();
+  }
 
-    async deleteClientByBusinessId(businessId){
-        return await this.clientRepository.deleteClientByBusinessId(businessId);
-    }
+  async findClientByBusinessId(businessId) {
+    const client = await this.clientRepository.findClientByBusinessId(
+      businessId
+    );
+    if (!client) throw new AppError(404, "This client does not exist");
+    return client;
+  }
 
-    async updateClient(businessId, clientData){
-        const client = await this.clientRepository.findClientByBusinessId(businessId);
-        
-        if(!client) return null;
+  async deleteClientByBusinessId(businessId) {
+    const client = await this.clientRepository.findClientByBusinessId(
+      businessId
+    );
+    if (!client) throw new AppError(404, "This client does not exist");
+    return await this.clientRepository.deleteClientByBusinessId(businessId);
+  }
 
-        Object.keys(clientData).forEach((key)=>{
-            client[key] = clientData[key];
-        })
+  async updateClient(businessId, clientData) {
+    const client = await this.clientRepository.findClientByBusinessId(
+      businessId
+    );
 
-        return await this.clientRepository.saveClient(client);
-    }
+    if (!client) throw new AppError(404, "This client does not exist");
+
+    Object.keys(clientData).forEach((key) => {
+      client[key] = clientData[key];
+    });
+
+    return await this.clientRepository.saveClient(client);
+  }
 }
 
 module.exports = ClientService;

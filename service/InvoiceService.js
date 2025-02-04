@@ -104,7 +104,7 @@ class InvoiceService {
     const existingInvoice = await this.invoiceRepository.findInvoiceByNumber(
       invoiceNumber
     );
-    if (!existingInvoice || existingInvoice.length === 0) return null;
+    if (!existingInvoice || existingInvoice.length === 0) throw new AppError(404, "This invoice does not exist");
 
     Object.keys(invoiceData).forEach((key) => {
       existingInvoice[key] = invoiceData[key];
