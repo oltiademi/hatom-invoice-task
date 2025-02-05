@@ -71,14 +71,14 @@ describe("ClientService", () => {
     const businessId = "VA8888";
     const clientData = {
         name: "Test test",
-        company: "Test",
-        address: "123 test street",
+        company: "Test Company",
+        address: "123 Test street",
         country: "Test country",
         city: "Test city",
         zipCode: "10000",
-        phoneNumber: "+484494",
-        email: "test@gmail.com",
-        uniqueBusinessId: "VA8888",
+        phoneNumber: "+38348804494",
+        email: "japanifaceit@gmail.com",
+        uniqueBusinessId: "OA8888",
       }
       mockRepository.findClientByBusinessId.mockResolvedValue(clientData)
 
