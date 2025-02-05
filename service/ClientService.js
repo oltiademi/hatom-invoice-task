@@ -6,6 +6,19 @@ class ClientService {
   }
 
   async createClient(clientData) {
+    const client = await this.clientRepository.findClientByBusinessId(
+      clientData.businessId
+    );
+
+    if (client)
+      throw new AppError(400, "A user with this business ID already exists");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isEmailValidFormat = emailRegex.test(clientData.email);
+    if (!isEmailValidFormat)
+      throw new AppError(400, "Email is not a valid format");
+
+    if (clientData.name.length < 4)
+      throw new AppError(400, "Name is too short");
     return await this.clientRepository.createClient(clientData);
   }
 

@@ -6,7 +6,6 @@ const ClientSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      minlength: [3, "Name is too short"],
     },
     company: {
       type: String,
@@ -32,12 +31,6 @@ const ClientSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      validate: {
-        validator: (v) => {
-          return /^(10\d{3})$/.test(v);
-        },
-        message: (props) => `${props.value} is not valid!`,
-      },
     },
     phoneNumber: {
       type: String,
@@ -50,18 +43,12 @@ const ClientSchema = new mongoose.Schema(
       trim: true,
       unique: true,
       lowercase: true,
-      validate: {
-        validator: function (email) {
-          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); // Simple email regex
-        },
-        message: "Invalid email format.",
-      },
     },
     uniqueBusinessId: {
       type: String,
       required: true,
-      unique: true,
       trim: true,
+      unique: true
     },
   },
   { timestamps: true }

@@ -25,7 +25,6 @@ class EmailService {
         if (error) {
           reject(new AppError(500, error));
         } else {
-          console.log("email sent:", info.response);
           resolve(info);
         }
       });

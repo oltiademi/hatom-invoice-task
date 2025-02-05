@@ -15,6 +15,24 @@ class InvoiceService {
     this.emailService = emailService;
   }
   async createInvoice(invoiceData) {
+    if (!invoiceData.issueDate || !invoiceData.dueDate)
+      throw new AppError(400, "Issue date and due date are required");
+
+    if (new Date(invoiceData.dueDate) <= new Date(invoiceData.issueDate)) {
+      throw new AppError(400, "Issue date can't be later than due date");
+    }
+
+    if (invoiceData.vat < 0 || invoiceData.vat > 100) {
+      throw new AppError(400, "VAT must be between 0 and 100.");
+    }
+
+    if (!invoiceData.services || invoiceData.services.length === 0) {
+      throw new AppError(400, "Include at least one service");
+    }
+
+    if (invoiceData.discount < 0)
+      throw new AppError(400, "Discount can't be lower than 0");
+
     let client = await this.clientRepository.findClientByBusinessId(
       invoiceData.client.uniqueBusinessId
     );
@@ -104,7 +122,8 @@ class InvoiceService {
     const existingInvoice = await this.invoiceRepository.findInvoiceByNumber(
       invoiceNumber
     );
-    if (!existingInvoice || existingInvoice.length === 0) throw new AppError(404, "This invoice does not exist");
+    if (!existingInvoice || existingInvoice.length === 0)
+      throw new AppError(404, "This invoice does not exist");
 
     Object.keys(invoiceData).forEach((key) => {
       existingInvoice[key] = invoiceData[key];
