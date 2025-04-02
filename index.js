@@ -20,7 +20,7 @@ app.use("/api/v1/services", serviceRouter);
 setupSwagger(app);
 app.use(errorHandler);
 
-const PORT = process.env.PORT;
+const PORT = 8081;
 
 app.listen(PORT, () => {
   console.log(`App is listening in port ${PORT}`);
