@@ -12,6 +12,11 @@ app.use(express.json());
 
 connectDB();
 
+app.get('/hello', ()=>{
+  res.status(200).json({
+    message: "hello"
+  })
+})
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/invoices", invoiceRouter);
 app.use("/api/v1/clients", clientRouter);
@@ -20,7 +25,7 @@ app.use("/api/v1/services", serviceRouter);
 setupSwagger(app);
 app.use(errorHandler);
 
-const PORT = 8081;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`App is listening in port ${PORT}`);
